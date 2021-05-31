@@ -1,25 +1,57 @@
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import Plan from './plan';
+class App extends Component {
+   	state = {
+    item: [],
+    text:""
+  }
+  
+  handleChange = (e) => {
+  this.setState({text:e.target.value})
 }
-
+  handleAdd = (e) => {
+  if (this.state.text!=="") {
+    const item = [...this.state.item, this.state.text];
+    this.setState({ item: item,text:"" });
+  }
+  }
+  handleDelete = (id) => {
+    const oldItem = [...this.state.item];
+    const items = oldItem.filter((element, i) => {
+      return i !== id;
+    })
+    this.setState({item: items});
+  }
+  render()  {
+    return (
+      <div className="container-fluid my-5">
+        <div className="row">
+          <div className="col-sm-6 mx-auto text-white shadow-lg p-3">
+            <h1 className="text-center">Today's Plan</h1>
+            <div className="row">
+              <div className="col-9">
+                <input type="text" className="form-control" placeholder="Write Plan Here" value={this.state.text} onChange={this.handleChange} />
+              </div>
+              <div className="col-2">
+                <button className="btn btn-warning font-weight-bold px-5" onClick={this.handleAdd}>Add</button>
+              </div>
+              <div className="container-fluid">
+                <ul className="list-unstyled row m-5">
+                  
+                  {
+                    this.state.item.map((value, i) => {
+                    return <Plan key={i} id={i} value={value}sendData={this.handleDelete} ></Plan>
+                    })
+                  }
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
 export default App;
